@@ -1,5 +1,6 @@
 from sentiment_analysis import SentimentAnalysis
 from sentiment_analysis import AnalysisResponce
+from hotel_attributes import HotelAttributes
 
 from collections import defaultdict
 
@@ -39,7 +40,7 @@ class ReviewAnalyzerResult(object):
         for i in range(number_of_values):
             print(self._neg[i])
 
-class ReviewAnalyzer(object):
+class ReviewsAnalyzer(object):
     def __init__(self, data_path):
         self._data_path = data_path
         self._result = {}
@@ -56,24 +57,25 @@ class ReviewAnalyzer(object):
     def analyze(self):
         with open(self._data_path, 'r') as input_file:
             lines = input_file.readlines()
-            for sentince in line.split('.'):
-                res = sentiment_analysis.predict(text=sentince)
-                self._add_result(sentince=sentince,
-                                 result=res)
+            for line in lines:
+                for sentince in line.split('.'):
+                    res = self._sentiment_analysis.predict(text=sentince)
+                    self._add_result(sentince=sentince,
+                                     result=res)
 
     def _add_result(self, sentince, result):
         if HotelAttributes.location(sentince):
             self._result['location'].add_result(sentince=sentince,
-                                                result=res)
+                                                result=result)
         if HotelAttributes.price(sentince):
             self._result['price'].add_result(sentince=sentince,
-                                             result=res)
+                                             result=result)
         if HotelAttributes.parking(sentince):
             self._result['parking'].add_result(sentince=sentince,
-                                             result=res)
+                                             result=result)
         if HotelAttributes.location(sentince):
             self._result['clean'].add_result(sentince=sentince,
-                                             result=res)
+                                             result=result)
 
     def print_results(self):
         for k, v in self._result.iteritems():
